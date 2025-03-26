@@ -1,0 +1,74 @@
+{% extends 'presence/base_admin.html' %}
+
+{% block body %}
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <!-- Titre -->
+        <div class="has-text-centered mb-6">
+          <h1 class="title is-3">Connexion</h1>
+          <p class="subtitle is-6">Veuillez vous connecter pour accéder à votre compte.</p>
+        </div>
+
+        <!-- Formulaire de connexion -->
+        <div class="box">
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- Affichage des erreurs générales du formulaire -->
+            {% if login_form.non_field_errors %}
+              <div class="notification is-danger">
+                {{ login_form.non_field_errors }}
+              </div>
+            {% endif %}
+
+            <!-- Champ Nom d'utilisateur -->
+            <div class="field">
+              <label class="label" for="{{ login_form.username.id_for_label }}">Nom d'utilisateur</label>
+              <div class="control has-icons-left">
+                {{ login_form.username }}
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </div>
+              {% if login_form.username.errors %}
+                <p class="help is-danger">{{ login_form.username.errors }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Champ Mot de passe -->
+            <div class="field">
+              <label class="label" for="{{ login_form.password.id_for_label }}">Mot de passe</label>
+              <div class="control has-icons-left">
+                {{ login_form.password }}
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </div>
+              {% if login_form.password.errors %}
+                <p class="help is-danger">{{ login_form.password.errors }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Bouton de connexion -->
+            <div class="field">
+              <div class="control">
+                <button type="submit" name="login_submit" class="button is-primary is-fullwidth">
+                  <span class="icon">
+                    <i class="fas fa-sign-in-alt"></i>
+                  </span>
+                  <span>Se connecter</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Lien pour réinitialiser le mot de passe -->
+            <div class="has-text-centered mt-4">
+              <a href="#" class="is-size-7">Mot de passe oublié ?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

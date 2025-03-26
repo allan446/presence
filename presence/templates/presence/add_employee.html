@@ -1,0 +1,125 @@
+<!-- templates/presence/add_employee.html -->
+
+{% extends 'presence/base_admin.html' %}
+
+{% block title %}Ajouter un Nouvel Employé{% endblock %}
+
+{% block admin_content %}
+    <section class="section">
+        <div class="container">
+            <h2 class="title is-3 has-text-centered mb-5">Ajouter un Nouvel Employé</h2>
+
+
+            <form method="POST" class="box p-6">
+                {% csrf_token %}
+                <!-- Champ Nom d'utilisateur -->
+                <div class="field">
+                    <label class="label">Nom d'utilisateur</label>
+                    <div class="control">
+                        <input class="input" type="text" name="username" placeholder="Nom d'utilisateur" required>
+                    </div>
+                </div>
+
+                <!-- Champ Email -->
+                <div class="field">
+                    <label class="label">Adresse e-mail</label>
+                    <div class="control">
+                        <input class="input" type="email" name="email" placeholder="Adresse e-mail" required>
+                    </div>
+                </div>
+
+                <!-- Champ Mot de passe -->
+            
+
+                <!-- Sélection Service -->
+                <div class="field">
+                    <label class="label">Service</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select name="service" required>
+                                <option value="" disabled selected>Sélectionner un service</option>
+                                {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggle Chef de Service -->
+                <div class="field">
+                    <label class="label">Chef de Service</label>
+                    <div class="control">
+                        <label class="switch">
+                            <input type="checkbox" name="is_manager">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Boutons -->
+                <div class="field is-grouped is-grouped-centered mt-4">
+                    <div class="control">
+                        <button type="submit" class="button is-primary is-medium">
+                            <i class="fas fa-check"></i> Ajouter l'Employé
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'employee_list' %}" class="button is-light is-medium">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Ajout du CSS pour le Toggle -->
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #4caf50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+
+{% endblock %}

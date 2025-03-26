@@ -1,0 +1,70 @@
+<!-- verify/templates/verify/base.html -->
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Presence{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style/bulma.min.css' %}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+</head>
+<body>
+
+<style>
+  .modal .box button {
+    margin-top: 20px; /* Ajouter un espacement au-dessus du bouton */
+    width: 150px; /* Définir une largeur spécifique */
+  }
+</style>
+
+
+{% block messages %}
+    {% if messages %}
+        <!-- Modal Structure -->
+        <div id="messageModal" class="modal is-active">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <h3 class="title is-4">Notification</h3>
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                    <div class="has-text-centered">
+                        <button class="button is-success" id="closeModal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close" id="closeModalButton"></button>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Fermer le modal en cliquant sur la croix
+    const closeModalButton = document.getElementById('closeModalButton');
+    const closeModal = document.getElementById('closeModal');
+    
+    // Fermer le modal quand on clique sur le bouton "Fermer"
+    if (closeModalButton) {
+      closeModalButton.addEventListener('click', () => {
+        closeModal.closest('.modal').classList.remove('is-active');
+      });
+    }
+
+    if (closeModal) {
+      closeModal.addEventListener('click', () => {
+        closeModal.closest('.modal').classList.remove('is-active');
+      });
+    }
+  });
+</script>
+
+  {% block body %}{% endblock %}
+</body>
+</html>

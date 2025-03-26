@@ -1,0 +1,97 @@
+{% extends 'presence/base_admin.html' %}
+{% load static %}
+
+{% block title %}Liste des Employés{% endblock %}
+
+{% block admin_content %}
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    <i class="fa-solid fa-users mr-2"></i> Liste des Employés
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th><i class="fa-solid fa-user"></i> Nom d'utilisateur</th>
+                                <th><i class="fa-solid fa-building"></i> Service</th>
+                                <th><i class="fa-solid fa-cogs"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                                <tr>
+                                    <td>
+                                        {% if employee.is_manager %}
+                                            <i class="fa-solid fa-arrow-right" style="color: green;"></i>
+                                        {% endif %}
+                                        {{ employee.user.username }}
+                                    </td>
+                                    <td>{{ employee.service.name }}</td>
+                                    <td>
+                                        <a class="button is-info is-small" href="{% url 'edit_employee' employee.id %}">
+                                            <i class="fa-solid fa-pen-to-square"></i> Modifier
+                                        </a>
+                                        <!-- Ajouter un bouton pour ouvrir la modale de confirmation -->
+                                        <a href="#" class="button is-danger is-small" onclick="openModal('{{ employee.id }}')">
+                                            <i class="fa-solid fa-trash"></i> Supprimer
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" class="has-text-centered">Aucun employé trouvé.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modale de confirmation avec Bulma -->
+<div class="modal" id="deleteModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <h2 class="title">Confirmer la suppression</h2>
+            <p>Êtes-vous sûr de vouloir supprimer cet employé ? Cette action est irréversible.</p>
+            <form method="POST" id="deleteForm" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" id="employeeId" name="employee_id" value="">
+                <button type="submit" class="button is-danger is-fullwidth">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                </button>
+            </form>
+            <button class="button is-light is-fullwidth" onclick="closeModal()">Annuler</button>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
+</div>
+
+<!-- Ajout du CDN pour FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+    // Ouvrir la modale
+    function openModal(employeeId) {
+        // Afficher la modale
+        document.getElementById('deleteModal').classList.add('is-active');
+        // Mettre l'ID de l'employé dans le formulaire
+        document.getElementById('employeeId').value = employeeId;
+    }
+
+    // Fermer la modale
+    function closeModal() {
+        // Cacher la modale
+        document.getElementById('deleteModal').classList.remove('is-active');
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'presence/base_admin.html' %}
+
+{% block admin_content %}
+  <div class="container my-4">
+    <div class="box has-text-centered">
+        <h1 class="title is-3 has-text-primary">Hystorique de Permission</h1>
+    </div>
+
+    
+    <div class="my-4">
+      <div class="box is-flex is-justify-content-center">
+        <table class="table is-striped is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>Date de Début</th>
+              <th>Date de Fin</th>
+              <th>Raison</th>
+              
+              <th>Etat</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if permissions %}
+              {% for permission in permissions %}
+        <tr>
+        <td>{{ permission.start_date }}</td>
+        <td>{{ permission.end_date }}</td>
+        <td>{{ permission.reason }}</td>
+        <td>{{ permission.is_approved }}</td>
+        <td>
+            {% if permission.is_approved == 'en cour de traitement' %}
+                <a href="{% url 'edit_permission' permission.id %}" class="button is-warning is-small">
+                    <i class="fa-solid fa-edit"></i> Modifier
+                </a>
+            {% else %}
+                <button class="button is-small" disabled>
+                    <i class="fa-solid fa-edit"></i> Modifier
+                </button>
+            {% endif %}
+          </td>
+          <td>
+            {% if permission.is_approved == 'en cour de traitement' %}
+                <a href="{% url 'delete_permission' permission.id %}" class="button is-danger is-small">
+                    <i class="fa-solid fa-edit"></i> supprimer
+                </a>
+            {% else %}
+                <button class="button is-small" disabled>
+                    <i class="fa-solid fa-edit"></i> supprimer
+                </button>
+            {% endif %}
+          </td>
+       </tr>
+{% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="6" class="has-text-centered">Aucune demande de permission.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

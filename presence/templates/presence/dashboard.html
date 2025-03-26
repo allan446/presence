@@ -1,0 +1,19 @@
+<!-- verify/templates/verify/dashboard.html -->
+
+{% extends 'presence/base_admin.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block admin_content %}
+    <div class=" my-6">
+        <div class="box is-flex is-justify-content-center">
+            <figure class="image is-128x128 ">
+                <img class="is-rounded" src="https://bulma.io/assets/images/placeholders/128x128.png" alt="photo.png" />
+            </figure>
+            <h1 class="my-4">Welcome, <strong>{{ request.user.username }}<strong></h1>
+            
+        </div>
+        
+    </div>
+{% endblock %}
+

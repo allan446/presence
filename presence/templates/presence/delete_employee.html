@@ -1,0 +1,27 @@
+{% extends 'presence/base_admin.html' %}
+
+<!-- presence/templates/presence/delete_employee.html -->
+<!-- templates/delete_employee.html -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer Employé</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h2 class="title">Confirmer la suppression de {{ employee.user.username }}</h2>
+            <form method="POST" action="{% url 'delete_employee' employee.id %}">
+                {% csrf_token %}
+                <p>Êtes-vous sûr de vouloir supprimer cet employé ? Cette action est irréversible.</p>
+                <button type="submit" class="button is-danger">Supprimer</button>
+                <a href="{% url 'employee_list' %}" class="button is-light">Annuler</a>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
+

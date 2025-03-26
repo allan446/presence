@@ -1,0 +1,135 @@
+{% extends 'presence/base.html' %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'style/bulma.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/locales/fr.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css">
+
+<!-- FullCalendar JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+
+<!-- FullCalendar Locale (optionnel pour la langue française) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/locales/fr.js"></script>
+
+<!-- Ton code JavaScript qui initialise le calendrier -->
+<script>
+
+    <style>
+        .fc-daygrid-event {
+            background-color: #e74c3c !important;
+            color: white !important;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .fc-daygrid-event:hover {
+            background-color: #c0392b !important;
+        }
+
+        .fc-toolbar-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .calendar-container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #4a90e2;
+            margin-bottom: 1.5rem;
+        }
+
+        #serviceFilter {
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+
+{% block body %}
+<section class="section">
+    <div class="container">
+        <div class="calendar-container">
+            <h2 class="title">Gestion des Permissions par Service</h2>
+
+            <div class="field">
+                <label class="label">Choisir un Service :</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select id="serviceFilter">
+                            <option value="">Tous les services</option>
+                            <option value="1">Informatique</option>
+                            <option value="2">Ressources Humaines</option>
+                            <option value="3">Finance</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calendar"></div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: function(info, successCallback, failureCallback) {
+            var serviceId = document.getElementById('serviceFilter').value;
+            var url = '/api/service-calendar/?service=' + serviceId;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => successCallback(data))
+                .catch(err => failureCallback(err));
+        },
+        eventRender: function(info) {
+            var tooltip = new Tooltip(info.el, {
+                title: info.event.title + " (" + info.event.start.toISOString().slice(0, 10) + " - " + info.event.end.toISOString().slice(0, 10) + ")",
+                placement: 'top',
+                trigger: 'hover',
+                container: 'body'
+            });
+        },
+        eventContent: function(arg) {
+            return {
+                html: `<b>${arg.event.title}</b><br>${arg.event.start.toISOString().slice(0, 10)}`
+            };
+        },
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        }
+    });
+    calendar.render();
+
+    // Ajoute un événement pour filtrer quand le service change
+    document.getElementById('serviceFilter').addEventListener('change', function() {
+        calendar.refetchEvents();  // Rafraîchit les événements avec le nouveau filtre
+    });
+});
+
+{% endblock %}

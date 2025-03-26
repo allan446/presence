@@ -1,0 +1,13 @@
+{% extends 'presence/base_admin.html' %}
+
+{% block content %}
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Mon Profil</h1>
+      <p><strong>Nom d'utilisateur:</strong> {{ request.employee.user.username }}</p>
+      <p><strong>Email:</strong> {{ request.employee.user.email }}</p>
+      <p><strong>Date d'inscription:</strong> {{ request.user.date_joined }}</p>
+      <!-- Ajoute plus de détails selon ton besoin -->
+    </div>
+  </section>
+{% endblock %}

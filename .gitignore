@@ -1,4 +1,6 @@
 # Byte-compiled / optimized / DLL files
+static/fontawesome-free-6.7.2-web/
+static/fontawesome-free-6.7.2-web/*
 __pycache__/
 *.py[cod]
 *$py.class
@@ -58,7 +60,6 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
 db.sqlite3-journal
 
 # Flask stuff:
