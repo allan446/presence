@@ -1,0 +1,50 @@
+{% extends 'presence/base_admin.html' %}
+{% load static %}
+
+{% block title %}Modifier un Service{% endblock %}
+
+
+{% block admin_content %}
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    <i class="fa-solid fa-building-circle-arrow-right mr-2"></i> Modifier le Service
+                </p>
+            </header>
+            <div class="card-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">
+                            <i class="fa-solid fa-briefcase"></i> Nom du Service
+                        </label>
+                        <div class="control has-icons-left">
+                            {{ form.name }}
+                        </div>
+                        <span class="icon is-small is-left">
+                            <i class="fa-solid fa-building"></i>
+                        </span>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary is-fullwidth">
+                                <i class="fa-solid fa-save"></i> Sauvegarder les modifications
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button type="" class="button is-light is-fullwidth">
+                                <a href="{% url 'add_service' %}" class="button is-danger is-small">
+                                    <span class="icon"><i class="fas fa-times"></i></span>
+                                    <span>annuler</span>
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

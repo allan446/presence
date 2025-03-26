@@ -1,0 +1,96 @@
+{% extends 'presence/base_admin.html' %}
+{% load static %}
+
+{% block title %}Ajouter un Service{% endblock %}
+
+
+{% block admin_content %}
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    <i class="fa-solid fa-building-circle-arrow-right mr-2"></i> Ajouter un Service
+                </p>
+            </header>
+            <div class="card-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">
+                            <i class="fa-solid fa-briefcase"></i> Nom du Service
+                        </label>
+                        <div class="control has-icons-left">
+                            {{ form.name }}
+                        </div>
+                        <span class="icon is-small is-left">
+                            <i class="fa-solid fa-building"></i>
+                        </span>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary is-fullwidth">
+                                <i class="fa-solid fa-plus-circle"></i> Ajouter Service
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des services -->
+    <div class="card mt-5">
+        <header class="card-header">
+            <p class="card-header-title">
+                <i class="fa-solid fa-list-ul mr-2"></i> Liste des Services
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="content">
+                {% if services %}
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Nom du Service</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                                <tr>
+                                    <td>{{ service.name }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_service' service.id %}" class="button is-warning is-small">
+                                            <i class="fa-solid fa-edit"></i> Modifier
+                                        </a>
+                                       <form method="POST" action="{% url 'delete_service' service.id %}" style="display: inline;" onsubmit="return confirmDelete(event);">
+                                            {% csrf_token %}
+                                            <button type="submit" class="button is-danger is-small">
+                                                <i class="fa-solid fa-trash"></i> Supprimer
+                                            </button>
+                                       </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Aucun service trouvé.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+    function confirmDelete(event) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+            event.preventDefault();  // Annuler la soumission du formulaire
+        }
+    }
+</script>
+
+{% endblock %}

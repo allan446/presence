@@ -1,0 +1,130 @@
+{% extends 'presence/base_admin.html' %}
+{% load static %}
+
+{% block title %}Ajouter un Service{% endblock %}
+
+{% block admin_content %}
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    <i class="fa-solid fa-building-circle-arrow-right mr-2"></i> Ajouter un Service
+                </p>
+            </header>
+            <div class="card-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">
+                            <i class="fa-solid fa-briefcase"></i> Nom du Service
+                        </label>
+                        <div class="control has-icons-left">
+                            {{ form.name }}
+                            <span class="icon is-small is-left">
+                                <i class="fa-solid fa-building"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary is-fullwidth">
+                                <i class="fa-solid fa-plus-circle"></i> Ajouter Service
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des services -->
+    <div class="card mt-5">
+        <header class="card-header">
+            <p class="card-header-title">
+                <i class="fa-solid fa-list-ul mr-2"></i> Liste des Services
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="content">
+                {% if services %}
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Nom du Service</th>
+                                <th>Nombre d'Employés</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                                <tr>
+                                    <td>
+                                        {{ service.name }}
+                                        <span class="has-text-grey-light">
+                                            ({{ service.employees.count }})  <!-- Affiche le nombre d'employés -->
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'edit_service' service.id %}" class="button is-warning is-small">
+                                            <i class="fa-solid fa-edit"></i> Modifier
+                                        </a>
+                                        <!-- Ajouter un bouton pour ouvrir la modale de confirmation -->
+                                        <button type="button" class="button is-danger is-small" onclick="openModal({{ service.id }}, '{{ service.name }}')">
+                                            <i class="fa-solid fa-trash"></i> Supprimer
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Aucun service trouvé.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modale de confirmation avec Bulma -->
+<div class="modal" id="deleteModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <h2 class="title">Confirmer la suppression</h2>
+            <p id="modalMessage">Êtes-vous sûr de vouloir supprimer ce service ? Cette action entraînera la suppression de tous les employés associés à ce service. Cette action est irréversible.</p>
+            <form method="POST" id="deleteForm" action="" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" id="serviceId" name="service_id" value="">
+                <button type="submit" class="button is-danger is-fullwidth">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                </button>
+            </form>
+            <button class="button is-light is-fullwidth" onclick="closeModal()">Annuler</button>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
+</div>
+
+<!-- Ajout du CDN pour FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+    // Ouvrir la modale
+    function openModal(serviceId, serviceName) {
+        // Mettre à jour l'action du formulaire avec l'ID du service
+        document.getElementById('deleteForm').action = "{% url 'delete_service' 0 %}".replace("0", serviceId);
+        // Mettre à jour le message de confirmation
+        document.getElementById('modalMessage').textContent = "Êtes-vous sûr de vouloir supprimer le service '" + serviceName + "' ? Cette action entraînera la suppression de tous les employés associés à ce service. Cette action est irréversible.";
+        // Afficher la modale
+        document.getElementById('deleteModal').classList.add('is-active');
+    }
+
+    // Fermer la modale
+    function closeModal() {
+        // Cacher la modale
+        document.getElementById('deleteModal').classList.remove('is-active');
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends 'presence/base_admin.html' %}
+
+{% block title %}Modifier l'Employé{% endblock %}
+
+{% block admin_content %}
+    <section class="section">
+        <div class="container">
+            <h2 class="title is-3 has-text-centered mb-5">Modifier l'Employé</h2>
+
+            <!-- Affichage des messages d'erreur dans une boîte modale -->
+            
+
+            <form method="POST" class="box p-6">
+                {% csrf_token %}
+                <!-- Champ Nom d'utilisateur -->
+                <div class="field">
+                    <label class="label">Nom d'utilisateur</label>
+                    <div class="control">
+                        <input class="input" type="text" name="username" value="{{ employee.user.username }}" required>
+                    </div>
+                </div>
+
+                <!-- Champ Email -->
+                <div class="field">
+                    <label class="label">Adresse e-mail</label>
+                    <div class="control">
+                        <input class="input" type="email" name="email" value="{{ employee.user.email }}" required>
+                    </div>
+                </div>
+
+                <!-- Champ Mot de passe -->
+                <div class="field">
+                    <label class="label">Mot de passe (laisser vide pour conserver l'actuel)</label>
+                    <div class="control">
+                        <input class="input" type="password" name="password" placeholder="Mot de passe">
+                    </div>
+                </div>
+
+                <!-- Sélection Service -->
+                <div class="field">
+                    <label class="label">Service</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select name="service" required>
+                                <option value="" disabled {% if not employee.service %}selected{% endif %}>Sélectionner un service</option>
+                                {% for service in services %}
+                                    <option value="{{ service.id }}" {% if employee.service.id == service.id %}selected{% endif %}>{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggle Chef de Service -->
+                <div class="field">
+                    <label class="label">Chef de Service</label>
+                    <div class="control">
+                        <label class="switch">
+                            <input type="checkbox" name="is_manager" {% if employee.is_manager %}checked{% endif %}>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Boutons -->
+                <div class="field is-grouped is-grouped-centered mt-4">
+                    <div class="control">
+                        <button type="submit" class="button is-primary is-medium">
+                            <i class="fas fa-check"></i> Enregistrer les Modifications
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'employee_list' %}" class="button is-light is-medium">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Ajout du CSS pour la Modale et le Toggle -->
+    <style>
+        /* Pour la boîte modale */
+        .modal {
+            display: none;
+        }
+        .modal.is-active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* Pour le Toggle */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #4caf50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+
+    <!-- JavaScript pour la gestion de la modale -->
+    <script>
+        // Affichage de la modale si un message est présent
+        {% if messages %}
+            document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.getElementById('error-modal');
+                modal.classList.add('is-active');
+            });
+        {% endif %}
+
+        // Fonction pour fermer la modale
+        function closeModal() {
+            const modal = document.getElementById('error-modal');
+            modal.classList.remove('is-active');
+        }
+    </script>
+
+{% endblock %}

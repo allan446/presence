@@ -1,0 +1,146 @@
+{% extends 'presence/base_admin.html' %}
+
+{% block title %}Modifier l'Employé{% endblock %}
+
+{% block admin_content %}
+    <section class="section">
+        <div class="container">
+            <h2 class="title is-3 has-text-centered mb-5">Modifier la permission</h2>
+
+            <!-- Affichage des messages d'erreur dans une boîte modale -->
+            
+
+            <form method="POST" class="box p-6">
+                {% csrf_token %}
+                <!-- Champ Nom d'utilisateur -->
+                <div class="field">
+                    <label class="label">Raison</label>
+                    <div class="control">
+                        <input class="input" type="text" name="reason" value="{{ permission.reason}}" required>
+                    </div>
+                </div>
+
+                <!-- Champ Email -->
+                <div class="field">
+                    <label class="label">Date de debut</label>
+                    <div class="control">
+                        <input class="input" type="date" name="email" value="{{ permission.start_date }}" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">date de fin</label>
+                    <div class="control">
+                        <input class="input" type="date" name="email" value="{{ permission.end_date }}" required>
+                    </div>
+                </div>
+
+
+                <div class="field is-grouped is-grouped-centered mt-4">
+                    <div class="control">
+                        <button type="submit" class="button is-primary is-medium">
+                            <i class="fas fa-check"></i> Enregistrer les Modifications
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'permission_history' %}" class="button is-light is-medium">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Ajout du CSS pour la Modale et le Toggle -->
+    <style>
+        /* Pour la boîte modale */
+        .modal {
+            display: none;
+        }
+        .modal.is-active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* Pour le Toggle */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #4caf50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+
+    <!-- JavaScript pour la gestion de la modale -->
+    <script>
+        // Affichage de la modale si un message est présent
+        {% if messages %}
+            document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.getElementById('error-modal');
+                modal.classList.add('is-active');
+            });
+        {% endif %}
+
+        // Fonction pour fermer la modale
+        function closeModal() {
+            const modal = document.getElementById('error-modal');
+            modal.classList.remove('is-active');
+        }
+    </script>
+
+{% endblock %}
